@@ -1,0 +1,2 @@
+100 \\ result for 1st extract-min operation120 \\ result for 2nd extract-min operation150 \\ result for 3rd extract-min operation42  \\ result for 4th extract-min operation
+1000 micro-sec
