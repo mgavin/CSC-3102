@@ -11,8 +11,6 @@
 #include <algorithm>
 #include "k_ary_heap.h"
 
-const int NULL = 0; //don't know why this isn't built-in..
-
 template<typename T, int size>
 KAryHeap<T, size>::KAryHeap()
 {
@@ -43,8 +41,9 @@ KAryHeap<T, size>::~KAryHeap()
 }
 
 template<typename T, int size>
-bool KAryHeap<T, size>::insert(const T& x)
+void KAryHeap<T, size>::insert(const T& x)
 {
+    /*
     if (data == NULL)
     {
         //no data yet, so take it.
@@ -64,7 +63,7 @@ bool KAryHeap<T, size>::insert(const T& x)
             
 
     }
-    reconfig<T, size>(node);
+    reconfig<T, size>(node);*/
 
 }
 
@@ -75,11 +74,11 @@ T KAryHeap<T, size>::extract_min()
     T return_val = *data;
     delete data;
     data = NULL;
-    reconfig<T, size>(this);
+    //reconfig<T, size>(this);
 
     return return_val;
 }
-
+/*
 template<typename T, int size>
 void KAryHeap<T, size>::reconfig(KAryHeap<T, size>* node)
 {
@@ -94,3 +93,4 @@ void KAryHeap<T, size>::reconfig(KAryHeap<T, size>* node)
             delete children[i];
     }
 }
+*/

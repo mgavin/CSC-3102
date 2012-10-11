@@ -11,6 +11,8 @@
 #ifndef KARYHEAP
 #define KARYHEAP
 
+
+
 template <typename T, int size>
 class KAryHeap
 {
@@ -27,7 +29,7 @@ class KAryHeap
     void reconfig(KAryHeap<T, size>* node);
     
     KAryHeap<T, size>* parent;
-    T* children[size];
+    KAryHeap<T, size>* children[size];
     
     T* data;
 };
