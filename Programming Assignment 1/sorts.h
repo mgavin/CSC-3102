@@ -51,10 +51,15 @@ void merge_sort(T* A, int size)
 }
 
 template <typename T, int sz>
-void heap_sort(T* A, int size, const KAryHeap<T, sz>& heap)
+void heap_sort(T* A, int size)
 {
-    //Modifies an empty array A to be the final sorted array
+    //Modifies the array A to be the final sorted array
+    KAryHeap<T, sz> heap;
+    for (int i = 0; i < size; ++i)
+        heap.insert(A[i]);         //heapify
 
+    for (int i = 0; i < size; ++i)
+        A[i] = heap.extract_min(); //extract until empty
 }
 
 #endif
