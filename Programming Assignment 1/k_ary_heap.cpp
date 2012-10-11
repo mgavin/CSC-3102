@@ -5,7 +5,7 @@
  *   Programming Homework #1
  *
  *   Description:
- *       Defines the k_ary_heap class.
+ *       Defines the KAryHeap class.
  *   
  *****/ 
 #include <algorithm>
@@ -14,7 +14,7 @@
 const int NULL = 0; //don't know why this isn't built-in..
 
 template<typename T, int size>
-k_ary_heap<T, size>::k_ary_heap()
+KAryHeap<T, size>::KAryHeap()
 {
     for (int i = 0; i < size; ++i)
     {
@@ -23,7 +23,7 @@ k_ary_heap<T, size>::k_ary_heap()
 }
 
 template<typename T, int size>
-k_ary_heap<T, size>::k_ary_heap(k_ary_heap<T, size>* parent) : parent(parent)
+KAryHeap<T, size>::KAryHeap(KAryHeap<T, size>* parent) : parent(parent)
 {
     for (int i = 0; i < size; ++i)
     {
@@ -32,7 +32,7 @@ k_ary_heap<T, size>::k_ary_heap(k_ary_heap<T, size>* parent) : parent(parent)
 }
 
 template<typename T, int size>
-k_ary_heap<T, size>::~k_ary_heap()
+KAryHeap<T, size>::~KAryHeap()
 {
     delete data;
     delete [] children;
@@ -43,7 +43,7 @@ k_ary_heap<T, size>::~k_ary_heap()
 }
 
 template<typename T, int size>
-bool k_ary_heap<T, size>::insert(const T& x)
+bool KAryHeap<T, size>::insert(const T& x)
 {
     if (data == NULL)
     {
@@ -53,18 +53,23 @@ bool k_ary_heap<T, size>::insert(const T& x)
     }
     else
     {
-        //traverse until a null hit
-        for (int i = 0; children[i] != NULL && children[i]->insert(x); ++i)
+        
+        if (children[i] == NULL)
+        {
+            children[i] = new KAryHeap<T, size>(this);
+            children[i]->insert(x);
+        }
+        else
+            children[i]->insert(x);
             
 
     }
     reconfig<T, size>(node);
 
-    return true;
 }
 
 template<typename T, int size>
-T k_ary_heap<T, size>::extract_min()
+T KAryHeap<T, size>::extract_min()
 {
     //take from the top
     T return_val = *data;
@@ -76,7 +81,7 @@ T k_ary_heap<T, size>::extract_min()
 }
 
 template<typename T, int size>
-void k_ary_heap<T, size>::reconfig(k_ary_heap<T, size>* node)
+void KAryHeap<T, size>::reconfig(KAryHeap<T, size>* node)
 {
     for (int i = 0; i < size; ++i)
     {

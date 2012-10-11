@@ -8,25 +8,25 @@
  *       Header file to define the class for the data structures that will be used.
  *   
  *****/
-#ifndef K_ARY_HEAP
-#define K_ARY_HEAP
+#ifndef KARYHEAP
+#define KARYHEAP
 
 template <typename T, int size>
-class k_ary_heap
+class KAryHeap
 {
     //min heap properties
  public:
-    k_ary_heap();
-    k_ary_heap(k_ary_heap<T, size>* parent);
-    ~k_ary_heap();
+    KAryHeap();
+    KAryHeap(KAryHeap<T, size>* parent);
+    ~KAryHeap();
 
     void insert(const T& x);
     T extract_min();
     
  private:
-    void reconfig(k_ary_heap<T, size>* node);
+    void reconfig(KAryHeap<T, size>* node);
     
-    k_ary_heap<T, size>* parent;
+    KAryHeap<T, size>* parent;
     T* children[size];
     
     T* data;

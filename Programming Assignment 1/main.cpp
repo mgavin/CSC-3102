@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     ifstream in("in_file", "r");
     ofstream out("out_file", "w");
     
-    k_ary_heap<int, 3> int_heap_s3;
+    KAryHeap<int, 3> int_heap_s3;
 
     return 0;
 }
