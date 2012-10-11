@@ -3,11 +3,11 @@
  *  InvertedIndex
  *
  *  Created by Manish Patil on 12/5/09.
- *  Copyright 2009 Louisiana State University. All rights reserved.
+ *  
  *
  */
 
-#include "timer.h"
+#include "timer.hpp"
 
 #if defined(WIN32)
 double CStopWatch::LIToSecs( LARGE_INTEGER & L) 

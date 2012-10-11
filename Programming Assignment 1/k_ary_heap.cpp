@@ -9,10 +9,10 @@
  *   
  *****/ 
 #include <algorithm>
-#include "k_ary_heap.h"
+#include "k_ary_heap.hpp"
 
-template<typename T, int size>
-KAryHeap<T, size>::KAryHeap()
+template <typename T, int size, typename compare>
+KAryHeap<T, size, compare>::KAryHeap()
 {
     for (int i = 0; i < size; ++i)
     {
@@ -20,8 +20,8 @@ KAryHeap<T, size>::KAryHeap()
     }
 }
 
-template<typename T, int size>
-KAryHeap<T, size>::KAryHeap(KAryHeap<T, size>* parent) : parent(parent)
+template <typename T, int size, typename compare>
+KAryHeap<T, size, compare>::KAryHeap(KAryHeap<T, size, compare>* parent) : parent(parent)
 {
     for (int i = 0; i < size; ++i)
     {
@@ -29,8 +29,8 @@ KAryHeap<T, size>::KAryHeap(KAryHeap<T, size>* parent) : parent(parent)
     }
 }
 
-template<typename T, int size>
-KAryHeap<T, size>::~KAryHeap()
+template <typename T, int size, typename compare>
+KAryHeap<T, size, compare>::~KAryHeap()
 {
     delete data;
     delete [] children;
@@ -40,8 +40,8 @@ KAryHeap<T, size>::~KAryHeap()
         children[i] = NULL;
 }
 
-template<typename T, int size>
-void KAryHeap<T, size>::insert(const T& x)
+template <typename T, int size, typename compare>
+void KAryHeap<T, size, compare>::insert(const T& x)
 {
     /*
     if (data == NULL)
@@ -67,8 +67,8 @@ void KAryHeap<T, size>::insert(const T& x)
 
 }
 
-template<typename T, int size>
-T KAryHeap<T, size>::extract_min()
+template <typename T, int size, typename compare>
+T KAryHeap<T, size, compare>::extract_min()
 {
     //take from the top
     T return_val = *data;
@@ -79,7 +79,7 @@ T KAryHeap<T, size>::extract_min()
     return return_val;
 }
 /*
-template<typename T, int size>
+template <typename T, int size = 2, typename compare = std::less<T> >
 void KAryHeap<T, size>::reconfig(KAryHeap<T, size>* node)
 {
     for (int i = 0; i < size; ++i)
