@@ -8,16 +8,14 @@
  *       Templatized functions are defined in the header file.
  *   
  *****/ 
+#ifndef SORTS
+#define SORTS
+
+#define NODEBUG
 
 #include <iostream>
 #include "k_ary_heap.hpp"
-
-#define NODEBUG //turn debugging off
 #include "debug.hpp"
-
-#ifndef SORTS
-#define SORTS
-const char TAB = '\t';
 
 template <typename T>
 void merge_sort(T* A, int size)

@@ -9,6 +9,9 @@
  *   
  *****/ 
 
+#ifndef DEBUGHPP
+#define DEBUGHPP
+
 #ifdef NODEBUG
 
 #define dbg(a)
@@ -18,7 +21,10 @@
 
 #define DEBUG
 #include <iostream>
+#define TAB "\t"
 #define dbg(a) a
 #define debug(a, end) std::cout << #a << ": " << a << end
+
+#endif
 
 #endif

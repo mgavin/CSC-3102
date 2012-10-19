@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <iomanip>
 #include <ctime>
+#include <functional>
 
 #include "k_ary_heap.hpp"
 #include "sorts.hpp"
@@ -29,6 +30,9 @@ void heap_ops()
     v.insert(3);
     v.insert(2);
     v.insert(1);
+
+    v.print();
+    
     int d = 0;
     try
     {

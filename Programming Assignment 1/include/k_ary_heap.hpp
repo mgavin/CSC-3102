@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <cstring>
 #include <vector>
+#include "debug.hpp"
 
 using std::swap;
 using std::copy;
@@ -46,6 +47,7 @@ public:
     
     void insert(const T& x);
     T extract() throw(EUnderflow);
+    void print();
 protected:
 
 };
@@ -74,10 +76,11 @@ void KAryHeap<T, size, compare>::heapify(int idx)
     for (int i = 1; i <= size; ++i)
     {
         if (child_idx+i <= data.size() &&
-            compare()(data[child_idx+i], data[child_idx+i]))
+            compare()(data[child_idx+i], data[comp_idx]))
         {
             comp_idx = child_idx+i;
         }
+        debug(comp_idx, TAB); debug(idx, std::endl);
     }
     if (comp_idx != idx)
     {
@@ -100,15 +103,18 @@ T KAryHeap<T, size, compare>::extract() throw(EUnderflow)
 template <typename T, int size, typename compare>
 void KAryHeap<T, size, compare>::heap_inc_key(int idx, T key)
 {
-    if (key > data[idx])
+    if (compare()(key, data[idx]))
     {
         int parent = idx / size; //floored by integer division
         data[idx] = key;
-        while (idx > 0 && data[parent] < data[idx]) //1 index parent problem
+        while (idx > 0 &&
+               compare()(data[parent],data[idx])) //1 index parent problem
         {
             swap(data[idx], data[parent]);
+            debug(data[idx], TAB); debug(data[parent], TAB);
             idx = parent;
             parent /= size;
+            debug(idx, TAB); debug(data[parent], std::endl);
         }
     }
 }
@@ -116,12 +122,19 @@ void KAryHeap<T, size, compare>::heap_inc_key(int idx, T key)
 template <typename T, int size, typename compare>
 void KAryHeap<T, size, compare>::insert(const T& x)
 {
-    T t = x;
-    memset((void*)&t, 0, sizeof(T));
-    t = ~t;
+    T t = ~x;
+    
+    //memset((void*)&t, 0, sizeof(T));
+    
     data.push_back(t);
     heap_inc_key(data.size()-1, x);
 }
 
+template <typename T, int size, typename compare>
+void KAryHeap<T, size, compare>::print()
+{
+    for (typename vector<T>::iterator it = data.begin(); it != data.end(); ++it)
+        std::cout << *it << " " << std::endl;
+}
 
 #endif
