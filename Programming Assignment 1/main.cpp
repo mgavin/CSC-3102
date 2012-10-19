@@ -23,6 +23,28 @@
 
 using namespace std;
 
+void heap_ops()
+{
+    KAryHeap<int, 3> v;
+    v.insert(3);
+    v.insert(2);
+    v.insert(1);
+    int d = 0;
+    try
+    {
+        while (d < 5)
+        {
+            cout << v.extract() << endl;
+            ++d;
+        }
+    }
+    catch (exception& e)
+    {
+        cout << e.what() << endl;
+    }
+}
+
+
 int main(int argc, char* argv[])
 {
     /*ifstream in("in_file", "r");
@@ -30,6 +52,8 @@ int main(int argc, char* argv[])
     
     //KAryHeap<int, 3> int_heap_s3;*/
 
+    heap_ops();
+    
     CStopWatch stopWatch;
     timespec nanoSleep = {0, 30000};
     

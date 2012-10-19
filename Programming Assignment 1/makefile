@@ -1,5 +1,5 @@
-OBJ= timer.o k_ary_heap.o avl_tree.o main.o
-HDR= sorts.hpp
+OBJ= timer.o avl_tree.o main.o
+HDR= sorts.hpp k_ary_heap.hpp
 
 %.o : %.cpp
 	g++ -c $< -I include/
