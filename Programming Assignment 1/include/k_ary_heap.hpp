@@ -17,11 +17,13 @@
 #include <algorithm>
 #include <cstring>
 #include <vector>
+#include <limits>
 #include "debug.hpp"
 
 using std::swap;
 using std::copy;
 using std::vector;
+using std::numeric_limits;
 
 template <typename T, int size = 2, typename compare = std::less<T> >
 class KAryHeap
@@ -73,13 +75,13 @@ void KAryHeap<T, size, compare>::heapify(int idx)
 {
     int child_idx = idx*size;
     int comp_idx = idx;
-    for (int i = 1; i <= size; ++i)
+    for (int i = 1; i <= size && child_idx+i < data.size(); ++i)
     {
-        if (child_idx+i <= data.size() &&
-            compare()(data[child_idx+i], data[comp_idx]))
+        if (compare()(data[child_idx+i], data[comp_idx]))
         {
             comp_idx = child_idx+i;
         }
+        debug(data[child_idx+i], TAB); debug(data[comp_idx], std::endl);
         debug(comp_idx, TAB); debug(idx, std::endl);
     }
     if (comp_idx != idx)
@@ -96,6 +98,7 @@ T KAryHeap<T, size, compare>::extract() throw(EUnderflow)
         throw EUnderflow();
     T top = *data.begin();
     *data.begin() = *data.rbegin();
+    data.pop_back();
     heapify(0);
     return top;
 }
@@ -105,10 +108,12 @@ void KAryHeap<T, size, compare>::heap_inc_key(int idx, T key)
 {
     if (compare()(key, data[idx]))
     {
+        dbg(std::cout << "in heap_inc_key\t");
         int parent = idx / size; //floored by integer division
         data[idx] = key;
-        while (idx > 0 &&
-               compare()(data[parent],data[idx])) //1 index parent problem
+        debug(idx, TAB); debug(key, TAB); debug(data[idx], std::endl);
+        while (idx != parent && idx >= 0 &&
+               compare()(data[idx],data[parent])) //1 index parent problem
         {
             swap(data[idx], data[parent]);
             debug(data[idx], TAB); debug(data[parent], TAB);
@@ -122,10 +127,14 @@ void KAryHeap<T, size, compare>::heap_inc_key(int idx, T key)
 template <typename T, int size, typename compare>
 void KAryHeap<T, size, compare>::insert(const T& x)
 {
-    T t = ~x;
+    T t;
+    if (compare()(numeric_limits<T>::max(), numeric_limits<T>::min()))
+        t = numeric_limits<T>::min();
+    else
+        t = numeric_limits<T>::max();
     
     //memset((void*)&t, 0, sizeof(T));
-    
+    debug(t, std::endl);
     data.push_back(t);
     heap_inc_key(data.size()-1, x);
 }
@@ -134,7 +143,8 @@ template <typename T, int size, typename compare>
 void KAryHeap<T, size, compare>::print()
 {
     for (typename vector<T>::iterator it = data.begin(); it != data.end(); ++it)
-        std::cout << *it << " " << std::endl;
+        std::cout << *it << " ";
+    std::cout << std::endl;
 }
 
 #endif

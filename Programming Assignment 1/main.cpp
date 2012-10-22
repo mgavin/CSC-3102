@@ -26,10 +26,12 @@ using namespace std;
 
 void heap_ops()
 {
-    KAryHeap<int, 3> v;
+    KAryHeap<int, 3, std::greater<int> > v;
     v.insert(3);
     v.insert(2);
     v.insert(1);
+    v.insert(4);
+    v.insert(23);
 
     v.print();
     
