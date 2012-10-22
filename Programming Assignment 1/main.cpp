@@ -18,6 +18,7 @@
 #include <functional>
 
 #include "k_ary_heap.hpp"
+#include "avl_tree.hpp"
 #include "sorts.hpp"
 #include "timer.hpp"
 #include "debug.hpp"
