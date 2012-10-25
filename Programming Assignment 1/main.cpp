@@ -25,49 +25,103 @@
 
 using namespace std;
 
-void heap_ops()
-{
-    KAryHeap<int, 3, std::greater<int> > v;
-    v.insert(3);
-    v.insert(2);
-    v.insert(1);
-    v.insert(4);
-    v.insert(23);
+static KAryHeap<int, 3> int_heap_s3;
+static AVLTree<int> int_avl_tree;
 
-    v.print();
-    
-    int d = 0;
-    try
-    {
-        while (d < 5)
-        {
-            cout << v.extract() << endl;
-            ++d;
-        }
-    }
-    catch (exception& e)
-    {
-        cout << e.what() << endl;
-    }
+template <typename T>
+void insert(KAryHeap<T>& heap, const T& data)
+{
+    heap.insert(data);
 }
+
+template <typename T>
+T& extract_min(KAryHeap<T>& heap)
+{
+    return heap.extract();
+}
+
+template <typename T>
+void insert(AVLTree<T>& avl_tree, const T& data)
+{
+    avl_tree.insert(data);
+}
+
+template <typename T>
+AVLTree<T>* min(AVLTree<T>& avl_tree, const T& data)
+{
+    return avl_tree.min();
+}
+
+template <typename T>
+AVLTree<T>* max(AVLTree<T>& avl_tree, const T& data)
+{
+    return avl_tree.max();
+}
+
+
+template <typename T>
+void inorder_traversal(AVLTree<T>& avl_tree, const ofstream& out_file)
+{
+    if (out_file.is_open())
+        avl_tree.inorder(out_file);
+}
+
+
+template <typename T>
+bool search(AVLTree<T>& avl_tree, const T& data)
+{
+    return avl_tree.search(data);
+}
+
+
+template <typename T>
+AVLTree<T>* successor(AVLTree<T>& avl_tree, const T& data)
+{
+    return avl_tree.successor(data);
+}
+
+template <typename T>
+AVLTree<T>* predecessor(AVLTree<T>& avl_tree, const T& data)
+{
+    return avl_tree.predecessor(data);
+}
+
+template <typename T>
+AVLTree<T>* select(AVLTree<T>& avl_tree, const T& data)
+{
+    return avl_tree.select(data);
+}
+
+template <typename T>
+int rank(AVLTree<T>& avl_tree, const T& data)
+{
+    return avl_tree.rank(data);
+}
+
+bool getInput(const ifstream& fin)
+{
+    if (fin.is_open())
+    {
+        
+
+
+    }
+    else
+        return false;
+}
+
 
 
 int main(int argc, char* argv[])
 {
-    /*ifstream in("in_file", "r");
-    ofstream out("out_file", "w");
-    
-    //KAryHeap<int, 3> int_heap_s3;*/
-
-    heap_ops();
+    ifstream in(argv[1], "r");
+    ofstream out(argv[2], "w");
     
     CStopWatch stopWatch;
-    timespec nanoSleep = {0, 30000};
     
     int A[9] = {5, 12, 4, 6, 10, 45, 3, 12, 11};
 
     stopWatch.startTimer();
-    nanosleep(&nanoSleep, NULL);
     merge_sort<int>(A, 9);
     stopWatch.stopTimer();
     cout << std::fixed << stopWatch.getElapsedTime() << endl;
