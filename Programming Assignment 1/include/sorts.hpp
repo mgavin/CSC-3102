@@ -10,9 +10,6 @@
  *****/ 
 #ifndef SORTS
 #define SORTS
-
-#define NODEBUG
-
 #include <iostream>
 #include "k_ary_heap.hpp"
 #include "debug.hpp"

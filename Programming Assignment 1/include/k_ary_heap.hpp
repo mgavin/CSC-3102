@@ -18,6 +18,8 @@
 #include <cstring>
 #include <vector>
 #include <limits>
+
+#define NODEBUG
 #include "debug.hpp"
 
 using std::swap;
