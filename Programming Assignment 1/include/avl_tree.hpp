@@ -22,7 +22,7 @@ class AVLTree
     
 private:
     T data;
-    int balance_factor, height;
+    int balance_factor, height, size;
     AVLTree<T, compare>* parent;
     AVLTree<T, compare>* left;
     AVLTree<T, compare>* right;
@@ -107,7 +107,7 @@ void AVLTree<T, compare>::remove(AVLTree<T, compare>* x)
         transplant( x, x->left ) ; 
     else
     {  
-        AVLTree<T, compare>* y = min( x->right );
+        AVLTree<T, compare>* y = x->right->min();
         if ( y->parent == x )
         {
             transplant( x, y );
@@ -233,11 +233,15 @@ void AVLTree<T, compare>::r_rotate(AVLTree<T, compare>* x)
 template <typename T, typename compare>
 void AVLTree<T, compare>::l_rotate(AVLTree<T, compare>* x)
 {
-    AVLTree<T, compare>* y = x->right;
-    transplant( y, y->left );
-    transplant( x, y );
+    AVLTree<T, compare>* y = x->right;  
+    y->parent = x->parent;
+    AVLTree<T, compare>* z = y->left;
     y->left = x;
     x->parent = y;
+    x->right = z; 
+    if (z != NULL) z->parent = x; 
+    x->height = 1 + x->parent->height;
+    y->height = 1 + y->parent->height;
 }
 
 // Assume *x has left child 
@@ -260,10 +264,13 @@ template <typename T, typename compare>
 void AVLTree<T, compare>::insert(AVLTree<T, compare>* root, AVLTree<T, compare>* z)
 {
     bool height_inc = false;
-    if ( root->data < z->data )
+    if (compare()(root->data, z->data))
     {
         if ( root->right )
+        {
+            root->size += 1;
             insert( root->right, z );
+        }
         else
         {
             root->right = z ;
@@ -316,6 +323,65 @@ void AVLTree<T, compare>::insert(AVLTree<T, compare>* root, AVLTree<T, compare>*
             }
         }
     }
+    else
+    {
+        if ( root->left )
+        {
+            root->size += 1;
+            insert( root->left, z );
+        }
+        else
+        {
+            root->left = z ;
+            z->balance_factor = 0 ;   	
+            height_inc = true ;
+        }
+        if ( height_inc )
+        {
+            /* Case 2.1 */   
+            if ( root->balance_factor == 0 )  
+                root->balance_factor = -1 ;
+            /* Case 2.2 */
+            else if ( root->balance_factor == 1 )
+            {
+                root->balance_factor = 0 ;
+                height_inc = false;
+            }
+            /* Case 2.3 */ 
+            else
+            {
+                /* First Subcase */
+                if ( root->left->balance_factor == -1 )
+                {
+                    r_rotate( root );  
+                    root->balance_factor = root->parent->balance_factor = 0 ;
+                    height_inc = false ;
+                }
+                // Second Subcase
+                else if ( root->left->balance_factor == 1 )
+                {
+                    int b = root->left->right->balance_factor ;       
+                    rl_rotate( root );
+                    root->parent->balance_factor = 0;
+                    if ( b == 0 )
+                    {
+                        root->balance_factor = root->parent->left->balance_factor = 0;
+                    }
+                    else if ( b == 1 )
+                    {
+                        root->balance_factor = 0;
+                        root->parent->left->balance_factor = -1;
+                    }
+                    else if ( b == -1 )
+                    {
+                        root->balance_factor = 1;
+                        root->parent->left->balance_factor = 0;
+                    }
+                    height_inc = false ;
+                }
+            }
+        }
+    }
 }
 
 template <typename T, typename compare>
@@ -326,16 +392,18 @@ int AVLTree<T, compare>::rank(AVLTree<T, compare>* x, const T& data)
     if (data < x->data)
         return (rank(x->left, data));
     if (data == x->data)
-        return (x->left->height + 1);
-    return (x->left->height + 1 + rank(x->right,data));
+        return (x->left->size + 1);
+    return (x->left->size + 1 + rank(x->right,data));
 }
 
 template <typename T, typename compare>
-void AVLTree<T, compare>::inorder(const std::ofstream& fout)
+void AVLTree<T, compare>::inorder(AVLTree<T, compare>* node,  const std::ofstream& fout)
 {
-    //left
-    //print
-    //right
+    if (node->left != NULL)
+        inorder(node->left, fout);
+    fout << " " << node->data << " ";
+    if (node->right != NULL)
+        inorder(node->right, fout);
 }
 
 template <typename T, typename compare>
@@ -343,11 +411,11 @@ AVLTree<T, compare>* AVLTree<T, compare>::select(AVLTree<T, compare>* x, const T
 {
     if (x == NULL)
         return NULL; 
-    if (x->left->height >= data)
+    if (x->left->size >= data)
         return select(x->left, data);
-    if (x->left->height + 1 == data) 
+    if (x->left->size + 1 == data) 
         return x;
-    return select(x->right , data - 1 - (x->left->height));
+    return select(x->right , data - 1 - (x->left->size));
 }
 
 #endif

@@ -22,22 +22,10 @@
 
 using namespace std;
 
-AVLTree<int> int_avl_tree(0);
+AVLTree<int>* int_avl_tree = NULL;
 
 static ofstream fout;
 static ifstream fin;
-
-template <typename T, int size>
-void insert(KAryHeap<T, size>& heap, const T& data)
-{
-    heap.insert(data);
-}
-
-template <typename T, int size>
-T extract(KAryHeap<T, size>& heap)
-{
-    return heap.extract();
-}
 
 template <typename T>
 void insert(AVLTree<T>& avl_tree, const T& data)
@@ -62,7 +50,7 @@ template <typename T>
 void inorder_traversal(AVLTree<T>& avl_tree)
 {
     if (fout.is_open())
-        avl_tree.inorder(fout);
+        avl_tree.inorder(&avl_tree, fout);
 }
 
 
@@ -104,7 +92,7 @@ void conduct_experiments()
 
 }
 
-bool getInput(bool using_avl)
+void process()
 {
     if (fin.is_open() && !fin.eof())
     {
@@ -121,79 +109,108 @@ bool getInput(bool using_avl)
             if (command == "IN")
             {
                 sst >> value;
-                if (using_avl)
-                    insert<int>(int_avl_tree, value);
+                timer.startTimer();
+                if (int_avl_tree == NULL)
+                    int_avl_tree = new AVLTree<int>(value);
                 else
-                    insert<int>(int_heap_s3, value);
-            }
-            else if (command == "EX")
-            {
-                fout << extract<int>(int_heap_s3) << endl;
+                    insert<int>(*int_avl_tree, value);
+                timer.stopTimer();
+                fout << "Insert (" << value << ") : " << timer.getElapsedTime() << endl;
+                timer.refreshTimer();
             }
             else if (command == "MI")
             {
-                fout << min<int>(int_avl_tree) << endl;
+                int m;
+                timer.startTimer();
+                m = min<int>(*int_avl_tree);
+                timer.stopTimer();
+                fout << "Min (" << m << ") : " << timer.getElapsedTime() << endl;
+                timer.refreshTimer();
             }
             else if (command == "MA")
             {
-                fout << max<int>(int_avl_tree) << endl;
+                int m;
+                timer.startTimer();
+                m = max<int>(*int_avl_tree);
+                timer.stopTimer();
+                fout << "Max (" << m << ") : " << timer.getElapsedTime() << endl;
+                timer.refreshTimer();
             }
             else if (command == "TR")
             {
-                inorder_traversal<int>(int_avl_tree);
+                timer.startTimer();
+                inorder_traversal<int>(*int_avl_tree);
+                timer.stopTimer();
+                fout << " <- Inorder Traversal : " << timer.getElapsedTime() << endl;
+                timer.refreshTimer();
             }
             else if (command == "SR")
             {
                 sst >> value;
-                fout << search<int>(int_avl_tree, value) << endl;
+                bool found = false;
+                timer.startTimer();
+                found = search<int>(*int_avl_tree, value);
+                timer.stopTimer();
+                fout << "Search (" << value << "), found? " << found << " : " << timer.getElapsedTime() << endl;
+                timer.refreshTimer();
             }
             else if (command == "SC")
             {
                 sst >> value;
-                fout << successor<int>(int_avl_tree, value)->get_data() << endl;
+                int m;
+                timer.startTimer();
+                m = successor<int>(*int_avl_tree, value)->get_data();
+                timer.stopTimer();
+                fout << "Successor (" << value << ") = " << m << " : " << timer.getElapsedTime() << endl;
+                timer.refreshTimer();
             }
             else if (command == "PR")
             {
                 sst >> value;
-                fout << predecessor<int>(int_avl_tree, value)->get_data() << endl;
+                int m;
+                timer.startTimer();
+                m = predecessor<int>(*int_avl_tree, value)->get_data();
+                timer.stopTimer();
+                fout << "Predecessor (" << value << ") = " << m << " : " << timer.getElapsedTime() << endl;
+                timer.refreshTimer();
             }
             else if (command == "SE")
             {
                 sst >> value;
-                fout << select<int>(int_avl_tree, value)->get_data() << endl;
+                int m;
+                timer.startTimer();
+                m = select<int>(*int_avl_tree, value)->get_data();
+                timer.stopTimer();
+                fout << "Select (" << value << ") = " << m << " : " << timer.getElapsedTime() << endl;
+                timer.refreshTimer();
+                
             }
             else if (command == "RA")
             {
                 sst >> value;
-                fout << rank<int>(int_avl_tree, value) << endl;
+                int m;
+                timer.startTimer();
+                m = rank<int>(*int_avl_tree, value);
+                timer.stopTimer();
+                fout << "Rank (" << value << ") = " << m << " : " << timer.getElapsedTime() << endl;
+                timer.refreshTimer();
             }
             sst.clear();
         }
-        return true;
     }
-    else
-        return false;
 }
 
 int main(int argc, char* argv[])
 {
     //invoke the program like:
-    //   ./main infile outfile heap|avltree
-    if (argc != 4)
+    //   ./main infile outfile
+    if (argc != 3)
         return -1;
 
-    string ops_name(argv[3]);
-    
     fin.open(argv[1], ios::in);
     fout.open(argv[2], ios::out);
 
-    if (ops_name == "heap")
-        while (getInput(0)); //heap
-    else if (ops_name == "avltree")
-        while (getInput(1)); //avl tree   
-
-    //merge sort + heap sort operations
-    conduct_experiments();
-    
+    process();
+    delete int_avl_tree;
     return 0;
 }
